@@ -11,6 +11,7 @@ public class BallController : MonoBehaviour
     [SerializeField] float _forceExplosion = 10f;   // Tốc độ đẩy các quả bóng khi nổ
     [SerializeField] float _detectionRadius = 0.5f; // Bán kính phát hiện va chạm
     [SerializeField] float _detectDestroyRadius = 2f;
+    [SerializeField] ParticleSystem _explosionBall;
     private bool _isExploded = false;
     private Rigidbody2D _rb;
 
@@ -53,8 +54,14 @@ public class BallController : MonoBehaviour
 
     private IEnumerator WaitHide()
     {
-        yield return new WaitForSeconds(_delay);
+        var main = _explosionBall.main;
+        float timeFx = main.startLifetime.constant;
+        yield return new WaitForSeconds(_delay - timeFx);
+        _iconSpr.gameObject.SetActive(false);
+        _explosionBall.Play();
         DetectDestroy();
+        yield return new WaitForSeconds(timeFx);
+        _iconSpr.gameObject.SetActive(true);
         this.gameObject.SetActive(false);
     }
 
@@ -136,6 +143,7 @@ public class BallController : MonoBehaviour
 
     void DetectDestroy()
     {
+        _explosionBall.Play();
         // Phát hiện các vật thể trong bán kính
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, _detectDestroyRadius);
         Debug.LogError(hits.Count());
@@ -157,11 +165,16 @@ public class BallController : MonoBehaviour
 
                     // Sử dụng rb.velocity để đẩy các quả bóng
                     otherRb.velocity = explosionDirection.normalized * _forceExplosion;
+
                 }
             }
         }
     }
-
+    private void ActiveFx(bool value)
+    {
+        _explosionBall.gameObject.SetActive(value);
+        _explosionBall.Play();
+    }
 
     void OnDrawGizmos()
     {

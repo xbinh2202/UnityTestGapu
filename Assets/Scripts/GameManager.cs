@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
     [SerializeField] BallController _ballPrefab;
     private List<BallController> _ballPoolList = new();
+    [SerializeField] GameObject _poolBall;
     [SerializeField] bool _canSpawnBall;
     [SerializeField] float _delay = 0.5f;
 
@@ -69,6 +70,7 @@ public class GameManager : MonoBehaviour
             }
         }
         BallController ball = Instantiate(_ballPrefab, Vector3.zero, Quaternion.identity);
+        ball.transform.SetParent(_poolBall.transform);
         _ballPoolList.Add(ball);
         return ball;
     }
