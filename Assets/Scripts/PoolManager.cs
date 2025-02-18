@@ -12,12 +12,12 @@ public class PoolManager : MonoBehaviour
         Instance = this;
     }
 
-    public GameObject GetFromPool(GameObject obj)
+    public GameObject GetFromPool(GameObject obj, GameObject parent)
     {
         if (dicPools.ContainsKey(obj) == false)
         {
             dicPools.Add(obj, new MyPool(obj));
         }
-        return dicPools[obj].Get();
+        return dicPools[obj].Get(parent);
     }
 }

@@ -55,8 +55,8 @@ public class GameManager : MonoBehaviour
 
             //var ball = pool.Get();
 
-            PoolManager.Instance.GetFromPool(_ballPrefab.gameObject);
             //ball.transform.position = Vector3.zero;
+            PoolManager.Instance.GetFromPool(_ballPrefab.gameObject, _poolBall);
             yield return new WaitForSeconds(_delay);
         }
     }

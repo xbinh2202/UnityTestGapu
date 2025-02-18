@@ -14,7 +14,7 @@ public class MyPool : MonoBehaviour
         this.baseObj = baseObj;
     }
 
-    public GameObject Get()
+    public GameObject Get(GameObject obj)
     {
         if (stack.Count > 0)
         {
@@ -23,6 +23,7 @@ public class MyPool : MonoBehaviour
             return tmp;
         }
         tmp = GameObject.Instantiate(baseObj);
+        tmp.transform.SetParent(obj.transform);
         returnPool = tmp.AddComponent<ReturnToMyPool>();
         returnPool.pool = this;
         return tmp;

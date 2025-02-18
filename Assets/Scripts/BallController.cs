@@ -42,7 +42,6 @@ public class BallController : MonoBehaviour
     {
         Color randomColor = new Color(Random.value, Random.value, Random.value);
 
-        // Gán màu vào sprite
         _iconSpr.color = randomColor;
 
         _isExploded = false;
@@ -81,7 +80,6 @@ public class BallController : MonoBehaviour
         }
     }
 
-    // Giới hạn vận tốc của bóng
     void LimitSpeed()
     {
         if (_rb.velocity.magnitude > _forceAmount)
@@ -93,14 +91,13 @@ public class BallController : MonoBehaviour
     void ClampBallPosition()
     {
         // Lấy các giới hạn màn hình trong không gian thế giới
-        Vector3 screenMin = Camera.main.ScreenToWorldPoint(new Vector3(0, 0, 0)); // Góc dưới bên trái
-        Vector3 screenMax = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0)); // Góc trên bên phải
+        Vector3 screenMin = Camera.main.ScreenToWorldPoint(new Vector3(0, 0, 0));
+        Vector3 screenMax = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0));
 
         // Đảm bảo quả bóng không ra ngoài giới hạn màn hình
         float xPos = Mathf.Clamp(transform.position.x, screenMin.x, screenMax.x);
         float yPos = Mathf.Clamp(transform.position.y, screenMin.y, screenMax.y);
 
-        // Cập nhật lại vị trí của quả bóng
         transform.position = new Vector2(xPos, yPos);
     }
 
@@ -134,10 +131,8 @@ public class BallController : MonoBehaviour
 
             if (otherRb != null)
             {
-                // Tính hướng phản xạ
                 Vector2 direction1 = (_rb.position - otherRb.position).normalized;
 
-                // Đặt lại velocity để bóng bật ra
                 _rb.velocity = direction1 * _forceAmount;
                 otherRb.velocity = -direction1 * _forceAmount;
             }
@@ -150,33 +145,21 @@ public class BallController : MonoBehaviour
         // Phát hiện các vật thể trong bán kính
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, _detectDestroyRadius);
         Debug.LogError(hits.Count());
-        // Vẽ raycast từ vị trí bóng theo hướng vận tốc
+
         foreach (Collider2D hit in hits)
         {
-            // Bỏ qua chính bản thân bóng
             if (hit.gameObject != gameObject)
             {
                 Rigidbody2D otherRb = hit.GetComponent<Rigidbody2D>();
 
                 if (otherRb != null)
                 {
-                    // Tính hướng phản xạ
-
-                    // Đặt lại velocity để bóng bật ra
-                    // Tính vector từ quả bóng nổ đến các quả bóng xung quanh
                     Vector2 explosionDirection = otherRb.position - (Vector2)transform.position;
-
-                    // Sử dụng rb.velocity để đẩy các quả bóng
                     otherRb.velocity = explosionDirection.normalized * _forceExplosion;
 
                 }
             }
         }
-    }
-    private void ActiveFx(bool value)
-    {
-        _explosionBall.gameObject.SetActive(value);
-        _explosionBall.Play();
     }
 
     void OnDrawGizmos()
