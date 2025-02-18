@@ -25,7 +25,11 @@ public class BallController : MonoBehaviour
     {
 
     }
-
+    private void OnEnable()
+    {
+        Init();
+        Movement();
+    }
     // Update is called once per frame
     void Update()
     {
@@ -42,6 +46,8 @@ public class BallController : MonoBehaviour
         _iconSpr.color = randomColor;
 
         _isExploded = false;
+
+        transform.position = Vector3.zero;
     }
 
     private void Hide()
@@ -71,9 +77,6 @@ public class BallController : MonoBehaviour
         if (_rb != null)
         {
             Vector2 direction = (GameManager.Instance.getMousePos() - transform.position).normalized;
-
-            // Thêm lực theo hướng
-            // _rb.AddForce(direction * _forceAmount, ForceMode2D.Impulse);
             _rb.velocity = direction * _forceAmount;
         }
     }

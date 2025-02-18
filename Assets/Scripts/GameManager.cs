@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] float _delay = 0.5f;
 
     private Coroutine _coroutine;
+    //private MyPool pool;
 
     private void Awake()
     {
@@ -20,7 +21,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-
+        //pool = new MyPool(_ballPrefab.gameObject);
     }
     void Update()
     {
@@ -48,10 +49,14 @@ public class GameManager : MonoBehaviour
     {
         while (_canSpawnBall)
         {
-            BallController ball = getBall();
-            ball.transform.position = Vector3.zero; //đặt vị trí bóng xuất hiện
-            ball.Init();
-            ball.Movement();
+            //BallController ball = getBall();
+            //ball.Init();
+            //ball.Movement();
+
+            //var ball = pool.Get();
+
+            PoolManager.Instance.GetFromPool(_ballPrefab.gameObject);
+            //ball.transform.position = Vector3.zero;
             yield return new WaitForSeconds(_delay);
         }
     }
